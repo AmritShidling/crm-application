@@ -1,0 +1,27 @@
+
+server:
+  port: 8080
+spring:
+  application:
+    name: apigateway-service
+  cloud:
+    gateway:
+      routes:
+        - id: crm-customer-service
+          uri: lb://CRM-CUSTOMER-SERVICE
+          predicates:
+            - Path=/api/customers/**
+
+        - id: crm-lead-service
+          uri: lb://CRM-LEAD-SERVICE
+          predicates:
+            - Path=/api/leads/**
+
+        - id: crm-sale-service
+          uri: lb://CRM-SALE-SERVICE
+          predicates:
+            - Path=/api/deals/**
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
