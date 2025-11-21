@@ -1,11 +1,15 @@
-
 server:
   port: 8080
+
 spring:
   application:
     name: apigateway-service
+
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       routes:
         - id: crm-customer-service
           uri: lb://CRM-CUSTOMER-SERVICE
