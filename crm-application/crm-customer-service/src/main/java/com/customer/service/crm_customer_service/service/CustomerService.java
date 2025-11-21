@@ -1,5 +1,6 @@
 package com.customer.service.crm_customer_service.service;
 
+import com.customer.service.crm_customer_service.exception.CustomerNotFoundException;
 import com.customer.service.crm_customer_service.model.Customer;
 import com.customer.service.crm_customer_service.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,8 @@ public class CustomerService {
     }
 
     public Customer getCustomerById(Long id){
-        return repository.findById(id).orElse(null);
+
+        return repository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Customer with ID" + id + " not found"));
     }
 
     public Customer saveCustomer(Customer customer){
