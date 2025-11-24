@@ -1,5 +1,6 @@
 package com.sale.service.crm_sale_service.service;
 
+import com.sale.service.crm_sale_service.exception.DealNotFoundException;
 import com.sale.service.crm_sale_service.model.Deal;
 import com.sale.service.crm_sale_service.repository.DealRepository;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,12 @@ public class DealService {
     }
 
     public Deal getDealById(Long id){
-        return this.dealRepository.findById(id).orElse(null);
+
+        return this.dealRepository.findById(id).orElseThrow(()-> new DealNotFoundException("Deal with ID: " + id + " not exist" ));
     }
 
     public Deal updateDeal(Long id, Deal updated){
-        Deal deal = this.dealRepository.findById(id).orElse(null);
+        Deal deal = this.dealRepository.findById(id).orElseThrow(()-> new DealNotFoundException("Deal with ID "+ id +" not exist"));
         if(deal != null){
             deal.setTitle(updated.getTitle());
             deal.setStage(updated.getStage());

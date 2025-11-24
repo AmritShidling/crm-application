@@ -1,5 +1,6 @@
 package com.lead.service.crm_lead_service.service;
 
+import com.lead.service.crm_lead_service.exception.LeadNotFoundException;
 import com.lead.service.crm_lead_service.model.Lead;
 import com.lead.service.crm_lead_service.model.LeadStatus;
 import com.lead.service.crm_lead_service.repository.LeadRepository;
@@ -24,7 +25,7 @@ public class LeadService {
     }
 
     public Lead getLead(Long id){
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(()-> new LeadNotFoundException("Lead with ID "+ id + " not found"));
     }
 
     public void deleteLead(Long id){
@@ -32,7 +33,7 @@ public class LeadService {
     }
 
     public Lead updateStatus(Long id, LeadStatus status){
-        Lead lead = repository.findById(id).orElse(null);
+        Lead lead = repository.findById(id).orElseThrow(()-> new LeadNotFoundException("Lead with ID "+id+ " not found"));
         if(lead == null){ return null;}
         lead.setStatus(status);
 //        lead.setStatus(status);
