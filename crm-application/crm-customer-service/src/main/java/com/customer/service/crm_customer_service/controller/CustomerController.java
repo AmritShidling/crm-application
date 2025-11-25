@@ -1,7 +1,10 @@
 package com.customer.service.crm_customer_service.controller;
 
+import com.customer.service.crm_customer_service.DTO.CustomerCreateRequest;
+import com.customer.service.crm_customer_service.DTO.CustomerResponseDTO;
 import com.customer.service.crm_customer_service.model.Customer;
 import com.customer.service.crm_customer_service.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,19 +19,19 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<Customer> getAllCustomers(){
+    public List<CustomerResponseDTO> getAllCustomers(){
         return customerService.getAllCustomers();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomer(@PathVariable Long id){
-        Customer customer = customerService.getCustomerById(id);
+    public ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable Long id){
+        CustomerResponseDTO customer = customerService.getCustomerById(id);
         return customer!= null? ResponseEntity.ok(customer) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public Customer createCustomer(@RequestBody Customer customer){
-        return customerService.saveCustomer(customer);
+    public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerCreateRequest customer){
+        return ResponseEntity.ok(customerService.saveCustomer(customer));
     }
 
     @DeleteMapping
