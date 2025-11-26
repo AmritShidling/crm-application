@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "leads")
+@Builder
 public class Lead {
 
     @Id

@@ -1,5 +1,7 @@
 package com.lead.service.crm_lead_service.service;
 
+import com.lead.service.crm_lead_service.DTO.LeadRequestDTO;
+import com.lead.service.crm_lead_service.DTO.LeadResponseDTO;
 import com.lead.service.crm_lead_service.exception.LeadNotFoundException;
 import com.lead.service.crm_lead_service.model.Lead;
 import com.lead.service.crm_lead_service.model.LeadStatus;
@@ -16,16 +18,44 @@ public class LeadService {
         this.repository = repository;
     }
 
-    public Lead createLead(Lead lead){
-        return repository.save(lead);
+    public LeadResponseDTO createLead(LeadRequestDTO lead){
+        Lead toBeSaved = Lead.builder()
+                .email(lead.getEmail())
+                .phone(lead.getEmail())
+                .name(lead.getName())
+                .status(lead.getStatus())
+                .customerId(lead.getCustomerId())
+                .build();
+        Lead saved =  repository.save(toBeSaved);
+        return LeadResponseDTO.builder()
+                .phone(saved.getPhone())
+                .name(saved.getName())
+                .id(saved.getId())
+                .status(saved.getStatus())
+                .customerId(saved.getCustomerId())
+                .build();
     }
 
-    public List<Lead> getAllLeads(){
-        return this.repository.findAll();
+    public List<LeadResponseDTO> getAllLeads(){
+        return this.repository.findAll().stream().map(
+                this::mapToResponseDTO
+        ).toList();
     }
 
-    public Lead getLead(Long id){
-        return repository.findById(id).orElseThrow(()-> new LeadNotFoundException("Lead with ID "+ id + " not found"));
+    private LeadResponseDTO mapToResponseDTO(Lead lead){
+        return LeadResponseDTO.builder()
+                .id(lead.getId())
+                .email(lead.getEmail())
+                .phone(lead.getPhone())
+                .name(lead.getName())
+                .customerId(lead.getCustomerId())
+                .status(lead.getStatus())
+                .build();
+    }
+
+    public LeadResponseDTO getLead(Long id){
+        Lead lead  = repository.findById(id).orElseThrow(()-> new LeadNotFoundException("Lead with ID "+ id + " not found"));
+        return this.mapToResponseDTO(lead);
     }
 
     public void deleteLead(Long id){
@@ -34,9 +64,7 @@ public class LeadService {
 
     public Lead updateStatus(Long id, LeadStatus status){
         Lead lead = repository.findById(id).orElseThrow(()-> new LeadNotFoundException("Lead with ID "+id+ " not found"));
-        if(lead == null){ return null;}
         lead.setStatus(status);
-//        lead.setStatus(status);
         repository.save(lead);
         return lead;
     }
