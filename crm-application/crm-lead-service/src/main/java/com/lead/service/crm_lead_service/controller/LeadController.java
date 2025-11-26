@@ -1,5 +1,7 @@
 package com.lead.service.crm_lead_service.controller;
 
+import com.lead.service.crm_lead_service.DTO.LeadRequestDTO;
+import com.lead.service.crm_lead_service.DTO.LeadResponseDTO;
 import com.lead.service.crm_lead_service.model.Lead;
 import com.lead.service.crm_lead_service.model.LeadStatus;
 import com.lead.service.crm_lead_service.service.LeadService;
@@ -18,24 +20,24 @@ public class LeadController {
     }
 
     @PostMapping
-    public Lead createLead(@RequestBody Lead lead){
+    public LeadResponseDTO createLead(@RequestBody LeadRequestDTO lead){
         return leadService.createLead(lead);
     }
 
     @GetMapping
-    public List<Lead> getAllLeads(){
+    public List<LeadResponseDTO> getAllLeads(){
         return leadService.getAllLeads();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Lead> getLead(@PathVariable Long id){
-        Lead lead = leadService.getLead(id);
+    public ResponseEntity<LeadResponseDTO> getLead(@PathVariable Long id){
+        LeadResponseDTO lead = leadService.getLead(id);
         return lead == null? ResponseEntity.notFound().build(): ResponseEntity.ok(lead);
     }
 
     @PutMapping("/{id}/status")
     public ResponseEntity<Lead> updateStatus(@PathVariable Long id, @RequestParam LeadStatus status){
-        Lead lead = leadService.getLead(id);
+        LeadResponseDTO lead = leadService.getLead(id);
         if(lead == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(leadService.updateStatus(id, status));
     }
